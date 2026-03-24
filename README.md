@@ -1,73 +1,117 @@
-# Welcome to your Lovable project
+VapyGame – MERN Stack Application
 
-## Project info
+A full-stack web application built using the MERN stack (MongoDB, Express.js, React.js, Node.js).
+This platform allows users to register, log in securely, track scores, and view leaderboard rankings.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
+        
+Features
 
-## How can I edit this code?
+* 🔐 User Authentication (JWT-based)
+* 🔑 Secure Password Hashing (bcrypt)
+* 🧑 User Profiles with Points System
+* 🏆 Leaderboard (Top Players Ranking)
+* 🎯 Game Score Tracking
+* 📊 Dashboard Statistics
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+* **Frontend:** React.js, Vite, Tailwind CSS
+* **Backend:** Node.js, Express.js
+* **Database:** MongoDB Atlas
+* **Authentication:** JWT
+* **Security:** bcrypt
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+Project Structure
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```
+vapygame/
+├── frontend/       # React Application
+├── backend/        # Express Server
+├── README.md
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+⚙️ Installation & Setup
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Clone Repository
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```
+git clone https://github.com/anjiduda77-afk/vapy-games.git
+cd vapy-games
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
+Setup Backend
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```
+cd backend
+npm install
+node server.js
+```
+
+Server runs on:
+
+```
+http://localhost:5000
+```
+
+---
+Setup Frontend
+
+```
+cd frontend
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Frontend runs on:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+http://localhost:5173
+```
 
-**Use GitHub Codespaces**
+---
+🔗 API Endpoints
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+| Method | Endpoint  | Description       |
+| ------ | --------- | ----------------- |
+| POST   | /register | Register new user |
+| POST   | /login    | User login        |
+| GET    | /profiles | Get leaderboard   |
+| GET    | /stats    | Dashboard data    |
 
-## What technologies are used for this project?
+---
+🔐 Security Features
 
-This project is built with:
+* Password encryption using bcrypt
+* JWT-based authentication
+* Protected API routes
+* Role-based access control
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
+📈 Future Enhancements
 
-## How can I deploy this project?
+* Real-time leaderboard updates
+* Game matchmaking system
+* Payment integration for tournaments
+* Mobile app support
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+---
+👨‍💻 Author
 
-## Can I connect a custom domain to my Lovable project?
+**Anji Duda**
+GitHub: https://github.com/anjiduda77-afk
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+⭐ Conclusion
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+This project demonstrates a complete MERN stack implementation with authentication, database integration, and scalable architecture suitable for modern web applications.
+
+---
