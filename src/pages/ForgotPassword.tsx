@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { API_URL } from "@/contexts/AuthContext";
+const BASE_URL = "https://vapy-games.onrender.com";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -24,7 +24,7 @@ const ForgotPassword = () => {
     }
     setIsLoading(true);
     try {
-      const res = await fetch(`${API_URL}/reset-password`, {
+      const res = await fetch(`${BASE_URL}/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim().toLowerCase() })
