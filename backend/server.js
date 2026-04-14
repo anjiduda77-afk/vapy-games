@@ -12,9 +12,12 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:8080", "http://localhost:8081", "http://localhost:8082", "http://localhost:5173", "http://localhost:3000"],
-    credentials: true,
-    methods: ["GET", "POST"]
+    origin: [
+      "https://vapy-games.vercel.app",
+      "http://localhost:5173"
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -31,7 +34,6 @@ process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
 });
 
-const API_URL = "https://vapy-games.onrender.com";
 const uri = "mongodb+srv://anji0:Anji7206@cluster0.pxxzabh.mongodb.net/?appName=Cluster0";
 const JWT_SECRET = "vapygame_secret_key_12345";
 
