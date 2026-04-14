@@ -19,7 +19,7 @@ const io = new Server(server, {
 });
 
 app.use(cors({
-  origin: ["http://localhost:8080", "http://localhost:8081", "http://localhost:8082", "http://localhost:5173", "http://localhost:3000"],
+  origin: "https://vapy-games.vercel.app",
   credentials: true
 }));
 app.use(express.json({ limit: "10mb" })); // 10MB for base64 avatars
