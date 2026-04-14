@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = async (token: string) => {
     try {
-      const res = await fetch(`${API_URL}/me`, {
+      const res = await fetch(`${BASE_URL}/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -79,34 +79,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signUp = async (email: string, password: string, nickname: string, role: AppRole) => {
-    const res = await fetch(`${BASE_URL}/register`, {
+    const res = await fetch(`${BASE_URL}/signup`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({ email, password, nickname, role })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to register");
-    // Automatically login on signup
-    localStorage.setItem("vapy_token", data.token);
-    setSession({ access_token: data.token });
-    setUser({ id: data.user.id, email: data.user.email });
-    setProfile(data.user);
-    setRole(data.user.role);
+    if (!res.ok) {
+      throw new Error(data.message || "Signup failed");
+    }
+    return data.message;
   };
 
   const signIn = async (email: string, password: string) => {
     const res = await fetch(`${BASE_URL}/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({ email, password })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to login");
-    localStorage.setItem("vapy_token", data.token);
-    setSession({ access_token: data.token });
-    setUser({ id: data.user.id, email: data.user.email });
-    setProfile(data.user);
-    setRole(data.user.role);
+    if (!res.ok) {
+      throw new Error(data.message || "Login failed");
+    }
+    return data;
   };
 
   const signOut = async () => {
