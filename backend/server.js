@@ -31,7 +31,7 @@ process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
 });
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://vapy-games.onrender.com";
 const uri = "mongodb+srv://anji0:Anji7206@cluster0.pxxzabh.mongodb.net/?appName=Cluster0";
 const JWT_SECRET = "vapygame_secret_key_12345";
 
@@ -565,7 +565,7 @@ async function start() {
     });
 
     // ── Start server ────────────────────────────────────────
-    const PORT = 5000;
+    const PORT = process.env.PORT || 5000;
     server.listen(PORT, () => {
       console.log(`Server running on ${API_URL}`);
       console.log(`Socket.IO chat enabled on port ${PORT}`);
