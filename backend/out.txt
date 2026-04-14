@@ -1,0 +1,2 @@
+MongoDB Connected
+Server running
