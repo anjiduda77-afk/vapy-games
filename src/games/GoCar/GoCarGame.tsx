@@ -8,7 +8,7 @@ import { drawCityBg, drawVillageBg, drawPlayerCar, drawTrafficCar, drawHUD } fro
 import { useAuth } from "@/contexts/AuthContext";
 import goCarIcon from "../../test/gocar.png"; // Fix paths relative to GoCar folder
 
-const GOCAR_SOCKET_URL = "http://localhost:5000";
+const GOCAR_SOCKET_URL = "https://vapy-games.onrender.com";
 
 type GoCarScreen = "mode" | "playing" | "result" | "mp-lobby";
 export type GoCarEnv = "city" | "village";

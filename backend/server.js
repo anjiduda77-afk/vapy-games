@@ -578,7 +578,7 @@ async function start() {
     // ── Start server ────────────────────────────────────────
     const PORT = process.env.PORT || 5000;
     server.listen(PORT, () => {
-      console.log(`Server running on ${API_URL}`);
+      console.log(`Server running on port ${PORT}`);
       console.log(`Socket.IO chat enabled on port ${PORT}`);
     });
 
