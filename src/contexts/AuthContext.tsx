@@ -79,6 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signUp = async (email: string, password: string, nickname: string, role: AppRole) => {
+    console.log("Calling:", `${BASE_URL}/signup`);
     const res = await fetch(`${BASE_URL}/signup`, {
       method: "POST",
       headers: {
@@ -94,6 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
+    console.log("Calling:", `${BASE_URL}/login`);
     const res = await fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
