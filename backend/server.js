@@ -14,15 +14,24 @@ const io = new Server(server, {
   cors: {
     origin: [
       "https://vapy-games.vercel.app",
-      "http://localhost:5173"
+      "http://localhost:5173",
+      "http://localhost:8081",
+      "http://localhost:3000"
     ],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   }
 });
 
 app.use(cors({
-  origin: "https://vapy-games.vercel.app",
+  origin: [
+    "https://vapy-games.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:8081",
+    "http://localhost:3000",
+    "http://127.0.0.1:8081",
+    "http://127.0.0.1:5173"
+  ],
   credentials: true
 }));
 app.use(express.json({ limit: "10mb" })); // 10MB for base64 avatars
@@ -34,8 +43,8 @@ process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
 });
 
-const uri = "mongodb+srv://anji0:Anji7206@cluster0.pxxzabh.mongodb.net/?appName=Cluster0";
-const JWT_SECRET = "vapygame_secret_key_12345";
+const uri = process.env.MONGO_URI || "mongodb+srv://anji0:Anji7206@cluster0.pxxzabh.mongodb.net/?appName=Cluster0";
+const JWT_SECRET = process.env.JWT_SECRET || "vapygame_secret_key_12345";
 
 const client = new MongoClient(uri, {
   tls: true,

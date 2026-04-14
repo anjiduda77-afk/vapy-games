@@ -4,8 +4,10 @@ import {
   Shield, Users, Gamepad2, Trophy, Plus, Pencil, Trash2,
   X, Check, ChevronDown, Loader2, Star
 } from "lucide-react";
-import { useAuth, API_URL } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+
+const BASE_URL = "https://vapy-games.onrender.com";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
@@ -55,8 +57,8 @@ const AdminPanel = () => {
     if (role !== "admin") return;
     setLoading(true);
     const [pRes, gRes] = await Promise.all([
-      fetch(`${API_URL}/profiles`),
-      fetch(`${API_URL}/games`)
+      fetch(`${BASE_URL}/profiles`),
+      fetch(`${BASE_URL}/games`)
     ]);
     setPlayers(await pRes.json());
     setGames(await gRes.json());
@@ -80,7 +82,7 @@ const AdminPanel = () => {
     if (!newTitle.trim() || !token) return;
     setAdding(true);
     try {
-      const res = await fetch(`${API_URL}/games`, {
+      const res = await fetch(`${BASE_URL}/games`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ title: newTitle, description: newDesc, category: newCat, difficulty: newDiff })
@@ -99,7 +101,7 @@ const AdminPanel = () => {
   const saveEdit = async (gameId: string) => {
     if (!token) return;
     try {
-      const res = await fetch(`${API_URL}/games/${gameId}`, {
+      const res = await fetch(`${BASE_URL}/games/${gameId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ title: editTitle, description: editDesc, category: editCat, difficulty: editDiff })
@@ -117,7 +119,7 @@ const AdminPanel = () => {
   const deleteGame = async (gameId: string, title: string) => {
     if (!token || !confirm(`Remove "${title}" from the platform?`)) return;
     try {
-      const res = await fetch(`${API_URL}/games/${gameId}`, {
+      const res = await fetch(`${BASE_URL}/games/${gameId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -133,7 +135,7 @@ const AdminPanel = () => {
   const updatePoints = async (userId: string, points: number) => {
     if (!token) return;
     try {
-      const res = await fetch(`${API_URL}/admin/profiles/${userId}/points`, {
+      const res = await fetch(`${BASE_URL}/admin/profiles/${userId}/points`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ points })
@@ -149,7 +151,7 @@ const AdminPanel = () => {
   const toggleVerify = async (userId: string, current: boolean) => {
     if (!token) return;
     try {
-      const res = await fetch(`${API_URL}/admin/users/${userId}/verify`, {
+      const res = await fetch(`${BASE_URL}/admin/users/${userId}/verify`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ isVerified: !current })

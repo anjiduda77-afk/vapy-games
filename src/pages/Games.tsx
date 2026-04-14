@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Gamepad2, Play, Trophy, Zap, MousePointer2, Hash, ChevronUp, Search, Car, Users, Plus, LogIn, ArrowLeft, Shield, Clock, Star, Maximize2, Minimize2, X } from "lucide-react";
-import { useAuth, API_URL } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
+
+const BASE_URL = "https://vapy-games.onrender.com";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import ticTacToeIcon from "../tictactoeicon.jpeg.png";
@@ -421,7 +423,7 @@ const Games = () => {
 
   useEffect(() => {
     if (user) {
-      fetch(`${API_URL}/user-progress`, {
+      fetch(`${BASE_URL}/user-progress`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("vapy_token")}` }
       })
       .then(r => r.json())
@@ -444,7 +446,7 @@ const Games = () => {
       const nextLevel = cur + 1;
       const next={...prev,[gameId]:nextLevel};
       if (user) {
-        fetch(`${API_URL}/user-progress`, {
+        fetch(`${BASE_URL}/user-progress`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("vapy_token")}` },
           body: JSON.stringify({ game_id: gameId, level: nextLevel })
@@ -455,7 +457,7 @@ const Games = () => {
   };
 
   useEffect(()=>{
-    fetch(`${API_URL}/games`).then(r=>r.json()).then(d=>setDbGames(Array.isArray(d)?d:[])).catch(console.error);
+    fetch(`${BASE_URL}/games`).then(r=>r.json()).then(d=>setDbGames(Array.isArray(d)?d:[])).catch(console.error);
   },[]);
 
   const toggleFullscreen = () => {
@@ -476,7 +478,7 @@ const Games = () => {
     const matchId = `match_${gameId || 'game'}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     
     try{
-      const res=await fetch(`${API_URL}/add-points`,{
+      const res=await fetch(`${BASE_URL}/add-points`,{
         method:"POST",
         headers:{"Content-Type":"application/json",Authorization:`Bearer ${localStorage.getItem("vapy_token")}`},
         body:JSON.stringify({ 

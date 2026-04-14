@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Settings, Save, Camera, User, Trash2, Loader2 } from "lucide-react";
-import { useAuth, API_URL } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
+
+const BASE_URL = "https://vapy-games.onrender.com";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -63,7 +65,7 @@ const SettingsPage = () => {
         body.avatar_url = avatarBase64;
       }
 
-      const res = await fetch(`${API_URL}/profiles`, {
+      const res = await fetch(`${BASE_URL}/profiles`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

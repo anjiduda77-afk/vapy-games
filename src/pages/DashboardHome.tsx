@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Trophy, Gamepad2, Users, TrendingUp, Crown, Zap, WifiOff, ArrowRight, Play, Swords } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth, API_URL } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
+
+const BASE_URL = "https://vapy-games.onrender.com";
 
 const StatCard = ({ icon: Icon, label, value, color }: { icon: any; label: string; value: string | number; color: string }) => (
   <motion.div
@@ -31,7 +33,7 @@ const DashboardHome = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch(`${API_URL}/stats`);
+        const res = await fetch(`${BASE_URL}/stats`);
         if (res.ok) {
           setBackendOnline(true);
           const data = await res.json();
@@ -66,7 +68,7 @@ const DashboardHome = () => {
           <WifiOff className="w-5 h-5 flex-shrink-0" />
           <div>
             <p className="font-display font-semibold text-sm">Backend Offline</p>
-            <p className="text-xs opacity-80 font-body">Cannot reach the server at <span className="font-mono">{API_URL}</span>. Start the backend with <span className="font-mono">npm run dev</span> inside the <span className="font-mono">/backend</span> folder.</p>
+            <p className="text-xs opacity-80 font-body">Cannot reach the server at <span className="font-mono">{BASE_URL}</span>. Start the backend with <span className="font-mono">npm run dev</span> inside the <span className="font-mono">/backend</span> folder.</p>
           </div>
         </motion.div>
       )}

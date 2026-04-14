@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Trophy, Crown, Medal, Star, RefreshCw } from "lucide-react";
-import { API_URL, useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+
+const BASE_URL = "https://vapy-games.onrender.com";
 
 interface PlayerRank {
   nickname: string;
@@ -30,7 +32,7 @@ const Leaderboard = () => {
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/leaderboard?limit=50`);
+      const res = await fetch(`${BASE_URL}/leaderboard?limit=50`);
       if (res.ok) {
         const data = await res.json();
         setPlayers(data);

@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, Send, Users, Wifi, WifiOff, Hash, Smile } from "lucide-react";
-import { useAuth, API_URL } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+
+const BASE_URL = "https://vapy-games.onrender.com";
 import { Input } from "@/components/ui/input";
 import { io, Socket } from "socket.io-client";
 
@@ -30,7 +32,7 @@ const ChatRoom = () => {
   const inputRef       = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const s = io(API_URL, { transports: ["websocket", "polling"] });
+    const s = io(BASE_URL, { transports: ["websocket", "polling"] });
 
     s.on("connect", () => {
       setConnected(true);
