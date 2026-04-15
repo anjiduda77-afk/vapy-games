@@ -4,7 +4,7 @@ import { Trophy, Crown, Medal, Star, RefreshCw } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 
-const BASE_URL = "https://vapy-games.onrender.com";
+import { BASE_URL } from "@/lib/api";
 
 interface PlayerRank {
   nickname: string;

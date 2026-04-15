@@ -4,7 +4,7 @@ import { Settings, Save, Camera, User, Trash2, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
 
-const BASE_URL = "https://vapy-games.onrender.com";
+import { BASE_URL } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 

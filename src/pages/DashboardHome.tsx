@@ -4,7 +4,7 @@ import { Trophy, Gamepad2, Users, TrendingUp, Crown, Zap, WifiOff, ArrowRight, P
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
-const BASE_URL = "https://vapy-games.onrender.com";
+import { BASE_URL } from "@/lib/api";
 
 const StatCard = ({ icon: Icon, label, value, color }: { icon: any; label: string; value: string | number; color: string }) => (
   <motion.div

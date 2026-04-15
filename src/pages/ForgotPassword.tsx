@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-const BASE_URL = "https://vapy-games.onrender.com";
+import { BASE_URL } from "@/lib/api";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");

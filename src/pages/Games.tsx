@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Gamepad2, Play, Trophy, Zap, MousePointer2, Hash, ChevronUp, Search, Car, Users, Plus, LogIn, ArrowLeft, Shield, Clock, Star, Maximize2, Minimize2, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
-const BASE_URL = "https://vapy-games.onrender.com";
+import { BASE_URL } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import ticTacToeIcon from "../tictactoeicon.jpeg.png";

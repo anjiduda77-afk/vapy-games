@@ -4,7 +4,7 @@ import { MessageSquare, Send, Users, Wifi, WifiOff, Hash, Smile } from "lucide-r
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 
-const BASE_URL = "https://vapy-games.onrender.com";
+import { BASE_URL } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { io, Socket } from "socket.io-client";
 
