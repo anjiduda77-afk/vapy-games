@@ -49,8 +49,8 @@ const Auth = () => {
         // Navigation handled by useEffect watching session
       } else {
         const message = await signUp(email, password, nickname || "Player", selectedRole);
-        toast({ title: "Account created!", description: message || "Please wait for admin verification." });
-        setIsLogin(true); // Switch to login tab so they can try to login eventually
+        toast({ title: "Welcome to VAPY Games! 🎮", description: message || "Account created successfully!" });
+        // signUp now auto-logs in, session useEffect will redirect to dashboard
       }
     } catch (err: any) {
       const msg = err.message?.toLowerCase().includes("failed to fetch")

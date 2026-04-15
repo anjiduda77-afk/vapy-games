@@ -79,8 +79,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signUp = async (email: string, password: string, nickname: string, role: AppRole) => {
-    console.log("Calling:", `${BASE_URL}/signup`);
-    const res = await fetch(`${BASE_URL}/signup`, {
+    console.log("Calling:", `${BASE_URL}/register`);
+    const res = await fetch(`${BASE_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -89,9 +89,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.message || "Signup failed");
+      throw new Error(data.error || data.message || "Signup failed");
     }
-    return data.message;
+    // Auto-login after registration
+    if (data.token) {
+      localStorage.setItem("vapy_token", data.token);
+      setSession({ access_token: data.token });
+      if (data.user) {
+        setUser({ id: data.user.id, email: data.user.email });
+        setProfile({
+          user_id: data.user.id,
+          nickname: data.user.nickname,
+          avatar_url: data.user.avatar_url,
+          unique_id: data.user.unique_id,
+          points: data.user.points || 0
+        });
+        setRole(data.user.role || "player");
+      }
+    }
+    return "Account created! Welcome to VAPY Games!";
   };
 
   const signIn = async (email: string, password: string) => {
@@ -105,7 +121,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.message || "Login failed");
+      throw new Error(data.error || data.message || "Login failed");
+    }
+    // Save token and update all auth state
+    if (data.token) {
+      localStorage.setItem("vapy_token", data.token);
+      setSession({ access_token: data.token });
+      if (data.user) {
+        setUser({ id: data.user.id, email: data.user.email });
+        setProfile({
+          user_id: data.user.id,
+          nickname: data.user.nickname,
+          avatar_url: data.user.avatar_url,
+          unique_id: data.user.unique_id,
+          points: data.user.points || 0
+        });
+        setRole(data.user.role || "player");
+      }
     }
     return data;
   };
