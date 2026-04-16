@@ -5,12 +5,9 @@
 
 const getBaseUrl = () => {
   // Priority 1: Environment variable from Vite (Vercel)
-  if (import.meta.env.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL;
-  }
-  
-  // Priority 2: Hardcoded Production URL (Render)
-  return "https://vapy-games.onrender.com";
+  const url = import.meta.env.VITE_API_BASE_URL || "https://vapy-games.onrender.com";
+  console.log("🔗 VAPY API Initialized at:", url);
+  return url;
 };
 
 export const BASE_URL = getBaseUrl();
