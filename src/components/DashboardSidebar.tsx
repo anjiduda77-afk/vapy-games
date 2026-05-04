@@ -14,7 +14,7 @@ interface DashboardSidebarProps {
 }
 
 const DashboardSidebar = ({ isOpen, onClose }: DashboardSidebarProps) => {
-  const { profile, role, signOut } = useAuth();
+  const { profile, role, signOut, session } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
@@ -139,13 +139,23 @@ const DashboardSidebar = ({ isOpen, onClose }: DashboardSidebarProps) => {
                 <Switch checked={theme === "light"} onCheckedChange={toggleTheme} />
               </div>
 
-              <button
-                onClick={() => { signOut(); onClose(); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-destructive hover:bg-destructive/10 transition-all font-body font-medium"
-              >
-                <LogOut className="w-5 h-5" />
-                Sign Out
-              </button>
+              {session ? (
+                <button
+                  onClick={() => { signOut(); onClose(); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-destructive hover:bg-destructive/10 transition-all font-body font-medium"
+                >
+                  <LogOut className="w-5 h-5" />
+                  Sign Out
+                </button>
+              ) : (
+                <button
+                  onClick={() => { navigate("/auth"); onClose(); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-primary hover:bg-primary/10 transition-all font-body font-medium"
+                >
+                  <LogOut className="w-5 h-5" />
+                  Sign In
+                </button>
+              )}
             </div>
           </motion.aside>
         </>

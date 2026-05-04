@@ -33,19 +33,12 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              >
+              <Route path="/dashboard" element={<Dashboard />}>
                 <Route index element={<DashboardHome />} />
                 <Route path="leaderboard" element={<Leaderboard />} />
                 <Route path="games" element={<Games />} />
-                <Route path="admin" element={<AdminPanel />} />
-                <Route path="settings" element={<SettingsPage />} />
+                <Route path="admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
+                <Route path="settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
                 <Route path="esports" element={<Esports />} />
                 <Route path="chat" element={<ChatRoom />} />
               </Route>

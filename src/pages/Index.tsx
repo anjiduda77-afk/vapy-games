@@ -14,7 +14,7 @@ const Index = () => {
   }, [session, navigate]);
 
   const handleEnter = () => {
-    navigate("/auth");
+    navigate("/dashboard");
   };
 
   return (

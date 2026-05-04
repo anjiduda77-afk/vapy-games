@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Gamepad2, Play, Trophy, Zap, MousePointer2, Hash, ChevronUp, Search, Car, Users, Plus, LogIn, ArrowLeft, Shield, Clock, Star, Maximize2, Minimize2, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import { BASE_URL } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -417,9 +418,11 @@ const Games = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [gameLevels, setGameLevels] = useState<Record<string,number>>({});
+  const [guestPromptGame, setGuestPromptGame] = useState<string|null>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const { user, refreshProfile } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -499,6 +502,21 @@ const Games = () => {
   const allGames = [...BUILT_IN_GAMES,...dbGames];
   const filteredGames = allGames.filter(g => g.title.toLowerCase().includes(searchQuery.toLowerCase()) || (g.category && g.category.toLowerCase().includes(searchQuery.toLowerCase())));
   const activeGameData = BUILT_IN_GAMES.find(g=>g.id===activeGame);
+
+  const handleGameClick = (gameId: string) => {
+    if (!user) {
+      setGuestPromptGame(gameId);
+    } else {
+      setActiveGame(gameId);
+    }
+  };
+
+  const playAsGuest = () => {
+    if (guestPromptGame) {
+      setActiveGame(guestPromptGame);
+      setGuestPromptGame(null);
+    }
+  };
 
   // ── Active game view ──────────────────────────────────────────────────────
   if (activeGame && PLAYABLE.includes(activeGame)) {
@@ -583,6 +601,43 @@ const Games = () => {
   // ── Games grid ────────────────────────────────────────────────────────────
   return (
     <motion.div initial={{opacity:0}} animate={{opacity:1}} className="space-y-6">
+      <AnimatePresence>
+        {guestPromptGame && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-card border border-border rounded-xl p-6 max-w-sm w-full shadow-2xl relative"
+            >
+              <button
+                onClick={() => setGuestPromptGame(null)}
+                className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <LogIn className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h3 className="text-xl font-display font-bold text-center mb-2">Save Your Progress?</h3>
+              <p className="text-muted-foreground text-center text-sm mb-6">
+                Log in to save your scores, level up, and compete on the leaderboard!
+              </p>
+              <div className="space-y-3">
+                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => navigate('/auth')}>
+                  Log In Now
+                </Button>
+                <Button className="w-full" variant="outline" onClick={playAsGuest}>
+                  Play as Guest (No Progress Saved)
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-3">
@@ -614,7 +669,7 @@ const Games = () => {
             <motion.div key={game._id||game.id}
               whileHover={{y:-6,scale:1.03}} whileTap={{scale:0.95}}
               className={`flex flex-col items-center group ${isPlayable?"cursor-pointer":"opacity-75 grayscale-[0.3]"}`}
-              onClick={()=>isPlayable?setActiveGame(game.id):null}>
+              onClick={()=>isPlayable?handleGameClick(game.id):null}>
               {/* App Icon */}
               <div className="relative w-full aspect-square max-w-[150px] rounded-[2rem] p-[2px] bg-gradient-to-br from-white/20 via-white/5 to-transparent drop-shadow-xl shadow-black/50 overflow-hidden mb-4 group-hover:shadow-[0_0_25px_rgba(var(--primary),0.3)] transition-all duration-500">
                 <div className="w-full h-full rounded-[1.8rem] overflow-hidden relative bg-card flex items-center justify-center">
