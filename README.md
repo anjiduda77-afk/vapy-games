@@ -4,6 +4,15 @@ A full-stack web application built using the MERN stack (MongoDB, Express.js, Re
 This platform allows users to register, log in securely, track scores, and view leaderboard rankings.
 
 ---
+Aditya University — B.Tech AI & ML
+Team lead:    Duda AnjiBabu  --https://github.com/anjiduda77-afk
+Team member:  D Yogi, G Venky, CH Paresh
+Vercel deployed in Frontend & Backend in Render:- vapy-games.vercel.app
+
+Repo:-(https://github.com/anjiduda77-afk/vapy-games.git)
+
+
+
         
 Features
 
