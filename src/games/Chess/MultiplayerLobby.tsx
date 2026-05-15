@@ -20,7 +20,8 @@ interface Props {
 }
 
 export default function MultiplayerLobby({ onCreateRoom, onJoinRoom, onCancel, currentRoom }: Props) {
-  const { profile } = useAuth();
+  const auth = useAuth();
+  const profile = auth?.profile;
   const [view, setView] = useState<'main' | 'create' | 'join' | 'waiting'>('main');
   const [joinCode, setJoinCode] = useState('');
   const [copied, setCopied] = useState(false);

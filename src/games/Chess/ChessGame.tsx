@@ -1,6 +1,9 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Chess, Square } from 'chess.js';
+import * as ChessJSModule from 'chess.js';
+const Chess = typeof (ChessJSModule as any).Chess === 'function' ? (ChessJSModule as any).Chess : ChessJSModule;
+type Chess = import('chess.js').Chess;
+type Square = import('chess.js').Square;
 import ChessBoard from './ChessBoard';
 import { getAIMove, getHint, AI_CONFIGS, DIFFICULTY_LEVELS, DifficultyLevel } from './engine';
 import type { BoardTheme } from './ChessBoard';
@@ -66,7 +69,9 @@ export default function ChessGame({ level, onScore, onLevelUp }: Props) {
   const timerRef = useRef<ReturnType<typeof setInterval>|null>(null);
   
   // Online Multiplayer State
-  const { user, profile } = useAuth();
+  const auth = useAuth();
+  const user = auth?.user;
+  const profile = auth?.profile;
   const [socket, setSocket] = useState<Socket | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [opponentName, setOpponentName] = useState<string>('Opponent');
@@ -508,7 +513,7 @@ export default function ChessGame({ level, onScore, onLevelUp }: Props) {
         onMove={handleMove}
         flipped={flipped}
         boardTheme={boardTheme}
-        disabled={aiThinking || phase !== 'playing' || (mode === 'computer' && game.turn() !== playerColor)}
+        disabled={aiThinking || phase !== 'playing' || (mode !== 'local' && game.turn() !== playerColor)}
         lastMove={lastMove}
         hintSquare={hintSquare}
         hintTarget={hintTarget}
