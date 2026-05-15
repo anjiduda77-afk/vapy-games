@@ -11,6 +11,7 @@ import ticTacToeIcon from "../tictactoeicon.jpeg.png";
 import goCarIcon from "../test/gocar.png";
 import { io, Socket } from "socket.io-client";
 import { GoCarGame } from "../games/GoCar";
+import { ChessGame } from "../games/Chess";
 // ── 9 Difficulty Levels: Basic → Heroic ──────────────────────────────────────
 const LEVELS = [
   { n:1, name:"Basic",     emoji:"🌱", color:"text-emerald-400", bg:"bg-emerald-500/10", border:"border-emerald-500/30", glow:"",                                           mult:1.0 },
@@ -67,13 +68,14 @@ const LevelUpFlash = ({ level, onDone }: { level: number; onDone: () => void }) 
 
 // ── Built-in games (no difficulty field on cards) ─────────────────────────────
 const BUILT_IN_GAMES = [
+  { id:"chess",         title:"CHESS",          description:"Premium competitive chess!",  category:"Strategy", image_url:"" },
   { id:"click-frenzy",  title:"Click Frenzy",  description:"Click as fast as you can!", category:"Arcade", image_url:"" },
   { id:"memory-match",  title:"Memory Match",  description:"Match the cards!",           category:"Puzzle", image_url:"" },
   { id:"reaction-test", title:"Reaction Time", description:"Test your reflexes!",        category:"Reflex", image_url:"" },
   { id:"tic-tac-toe",   title:"Tic-Tac-Toe",   description:"Beat the AI!",               category:"Board",  image_url:ticTacToeIcon },
   { id:"go-car",        title:"GO CAR",         description:"Drive through city & village!", category:"Driving", image_url:goCarIcon },
 ];
-const PLAYABLE = ["click-frenzy","memory-match","reaction-test","tic-tac-toe","go-car"];
+const PLAYABLE = ["chess","click-frenzy","memory-match","reaction-test","tic-tac-toe","go-car"];
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // MEMORY MATCH
@@ -532,24 +534,28 @@ const Games = () => {
     };
 
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} ref={gameContainerRef} className="game-fullscreen-container w-full h-full relative">
-        {/* Transparent Global Click Dismissal Helper - optionally */}
-        
-        {/* Dedicated Exit Fullscreen Button */}
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        ref={gameContainerRef} 
+        className={`game-fullscreen-container w-full h-full relative ${isFullscreen ? 'bg-[#030308] flex flex-col' : ''}`}
+      >
+        {/* Dedicated Exit Fullscreen Button - Mobile Optimized */}
         {isFullscreen && (
           <button 
             onClick={toggleFullscreen} 
-            className="fixed top-8 right-8 z-[120] flex items-center gap-2 bg-black/60 hover:bg-primary/20 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/20 text-white font-display font-bold text-[10px] tracking-widest transition-all hover:border-primary hover:text-primary animate-in fade-in slide-in-from-top-4 duration-500 shadow-[0_0_20px_rgba(0,0,0,0.5)] group"
+            className="fixed top-4 right-4 md:top-8 md:right-8 z-[150] flex items-center gap-2 bg-black/60 hover:bg-primary/20 backdrop-blur-xl px-4 py-2 md:px-5 md:py-2.5 rounded-full border border-white/20 text-white font-display font-bold text-[10px] tracking-widest transition-all hover:border-primary hover:text-primary shadow-[0_0_20px_rgba(0,0,0,0.5)] group"
           >
             <Minimize2 className="w-4 h-4 group-hover:scale-110 transition-transform"/>
-            EXIT FULLSCREEN
+            <span className="hidden sm:inline">EXIT FULLSCREEN</span>
+            <span className="inline sm:hidden">EXIT</span>
           </button>
         )}
 
         {/* Immersive Fullscreen Header Control (Floats on hover) */}
         <div className={
           isFullscreen 
-            ? "fixed top-6 left-1/2 -translate-x-1/2 z-[110] flex gap-4 bg-black/80 backdrop-blur-xl px-6 py-3 rounded-full border border-white/10 opacity-0 hover:opacity-100 transition-all duration-500 shadow-2xl scale-90 hover:scale-100" 
+            ? "fixed top-6 left-1/2 -translate-x-1/2 z-[110] hidden md:flex gap-4 bg-black/80 backdrop-blur-xl px-6 py-3 rounded-full border border-white/10 opacity-0 hover:opacity-100 transition-all duration-500 shadow-2xl" 
             : "flex justify-between items-center mb-6 bg-card/40 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-lg"
         }>
           <button 
@@ -583,10 +589,11 @@ const Games = () => {
           </div>
         </div>
 
-        <div className={`transition-all duration-700 ease-in-out ${isFullscreen ? "p-0 bg-transparent w-full h-full flex items-center justify-center scale-110" : "glass rounded-3xl p-8 shadow-2xl relative overflow-hidden"}`}>
+        <div className={`transition-all duration-500 ease-in-out ${isFullscreen ? "flex-1 flex items-center justify-center p-2 sm:p-4 w-full h-full overflow-hidden" : "glass rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl relative overflow-hidden"}`}>
           {!isFullscreen && <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-30" />}
           
-          <div className={isFullscreen ? "scale-90 sm:scale-100" : ""}>
+          <div className={`w-full max-w-6xl mx-auto flex items-center justify-center ${isFullscreen ? "h-full" : ""}`}>
+            {activeGame === "chess"          && <ChessGame        level={level} onScore={onScore} onLevelUp={onLevelUp}/>}
             {activeGame === "click-frenzy"  && <ClickFrenzyGame  level={level} onScore={onScore} onLevelUp={onLevelUp}/>}
             {activeGame === "memory-match"  && <MemoryMatchGame  level={level} onScore={onScore} onLevelUp={onLevelUp}/>}
             {activeGame === "reaction-test" && <ReactionTestGame level={level} onScore={onScore} onLevelUp={onLevelUp}/>}
@@ -676,11 +683,12 @@ const Games = () => {
                   {game.image_url
                     ? <img src={game.image_url} alt={game.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"/>
                     : <div className="h-full w-full gradient-primary flex items-center justify-center">
+                        {game.id==="chess"          && <span className="text-5xl drop-shadow-md group-hover:scale-110 transition-transform duration-700">♟️</span>}
                         {game.id==="tic-tac-toe"   && <Hash         className="w-16 h-16 text-white/90 drop-shadow-md group-hover:scale-110 transition-transform duration-700"/>}
                         {game.id==="click-frenzy"  && <MousePointer2 className="w-16 h-16 text-white/90 drop-shadow-md group-hover:scale-110 transition-transform duration-700"/>}
                         {game.id==="reaction-test" && <Zap           className="w-16 h-16 text-white/90 drop-shadow-md group-hover:scale-110 transition-transform duration-700"/>}
                         {game.id==="go-car"         && <Car           className="w-16 h-16 text-white/90 drop-shadow-md group-hover:scale-110 transition-transform duration-700"/>}
-                        {!["tic-tac-toe","click-frenzy","reaction-test","go-car"].includes(game.id) && <Gamepad2 className="w-16 h-16 text-white/90 drop-shadow-md group-hover:scale-110 transition-transform duration-700"/>}
+                        {!["chess","tic-tac-toe","click-frenzy","reaction-test","go-car"].includes(game.id) && <Gamepad2 className="w-16 h-16 text-white/90 drop-shadow-md group-hover:scale-110 transition-transform duration-700"/>}
                       </div>
                   }
                   <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent opacity-40 pointer-events-none mix-blend-overlay"/>

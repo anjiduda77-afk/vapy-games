@@ -87,6 +87,8 @@ const connectedUsers = new Map();
 const chatHistory = [];
 // --- GO CAR Multiplayer Rooms ---
 const carRooms = new Map(); // roomId -> { players, started, winnerId }
+// --- CHESS Multiplayer Rooms ---
+const chessRooms = new Map(); // roomId -> { players[], fen, moves[], timer, started, settings }
 
 io.on("connection", (socket) => {
   console.log("Socket connected:", socket.id);
@@ -250,6 +252,89 @@ io.on("connection", (socket) => {
       room.players = room.players.filter(p => p.id !== socket.id);
       if (room.players.length === 0) carRooms.delete(roomId);
       else io.to(roomId).emit("gocar-player-joined", { players: room.players });
+    }
+  });
+
+  // ── CHESS Multiplayer Events ──────────────────────────────────────────────
+  const generateRoomCode = () => Math.random().toString(36).substring(2, 8).toUpperCase();
+
+  socket.on("chess-create-room", ({ userId, nickname, timeControl, settings }) => {
+    const roomId = generateRoomCode();
+    const room = {
+      roomId,
+      hostId: userId,
+      players: [{ id: socket.id, userId: userId, nickname, color: "w", connected: true }],
+      settings: settings || { timeControl: 600, matchType: 'casual', privacy: 'private', allowSpectators: true },
+      fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      moves: [],
+      started: false,
+      timeControl: settings?.timeControl || timeControl || 600,
+      timer: { w: settings?.timeControl || 600, b: settings?.timeControl || 600 },
+      drawOffer: null,
+      createdAt: Date.now()
+    };
+    chessRooms.set(roomId, room);
+    socket.join(roomId);
+    socket.emit("chess-room-created", { roomId, room });
+    console.log(`CHESS: Room ${roomId} created by ${nickname} with settings`, room.settings);
+  });
+
+  socket.on("chess-join-room", ({ roomId, userId, nickname }) => {
+    const room = chessRooms.get(roomId);
+    if (!room) { socket.emit("chess-error", { message: "Room not found or expired" }); return; }
+    if (room.players.length >= 2) { socket.emit("chess-error", { message: "Room is full" }); return; }
+    
+    // Check if player is already in room (prevent duplicate joins from same user)
+    if (room.players.find(p => p.userId === userId && p.userId !== undefined)) {
+      socket.emit("chess-error", { message: "You are already in this room" }); 
+      return;
+    }
+
+    room.players.push({ id: socket.id, userId: userId, nickname, color: "b", connected: true });
+    socket.join(roomId);
+    room.started = true;
+    io.to(roomId).emit("chess-game-start", { roomId, players: room.players, fen: room.fen, timeControl: room.timeControl });
+    console.log(`CHESS: ${nickname} joined room ${roomId}`);
+  });
+
+  socket.on("chess-move", ({ roomId, from, to, promotion, fen, san }) => {
+    const room = chessRooms.get(roomId);
+    if (!room) return;
+    room.fen = fen;
+    room.moves.push({ from, to, promotion, san, timestamp: Date.now() });
+    socket.to(roomId).emit("chess-opponent-move", { from, to, promotion, fen, san });
+  });
+
+  socket.on("chess-resign", ({ roomId }) => {
+    const room = chessRooms.get(roomId);
+    if (!room) return;
+    const resignPlayer = room.players.find(p => p.id === socket.id);
+    const winner = room.players.find(p => p.id !== socket.id);
+    io.to(roomId).emit("chess-game-over", { reason: "resign", winnerId: winner?.id, loserId: resignPlayer?.id });
+    room.started = false;
+  });
+
+  socket.on("chess-draw-offer", ({ roomId }) => {
+    socket.to(roomId).emit("chess-draw-offered", { from: socket.id });
+  });
+
+  socket.on("chess-draw-accept", ({ roomId }) => {
+    io.to(roomId).emit("chess-game-over", { reason: "draw-agreement" });
+    const room = chessRooms.get(roomId);
+    if (room) room.started = false;
+  });
+
+  socket.on("chess-chat", ({ roomId, message, nickname }) => {
+    socket.to(roomId).emit("chess-chat-message", { message, nickname, timestamp: Date.now() });
+  });
+
+  socket.on("chess-leave-room", ({ roomId }) => {
+    socket.leave(roomId);
+    const room = chessRooms.get(roomId);
+    if (room) {
+      room.players = room.players.filter(p => p.id !== socket.id);
+      if (room.players.length === 0) chessRooms.delete(roomId);
+      else io.to(roomId).emit("chess-player-left", { playerId: socket.id });
     }
   });
 });
