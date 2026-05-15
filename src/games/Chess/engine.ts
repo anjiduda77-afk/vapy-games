@@ -2,11 +2,8 @@
  * Chess AI Engine - Minimax with Alpha-Beta Pruning
  * Supports 6 difficulty levels from Beginner to Grandmaster
  */
-import * as ChessJSModule from 'chess.js';
-const Chess = typeof (ChessJSModule as any).Chess === 'function' ? (ChessJSModule as any).Chess : ChessJSModule;
-type Chess = import('chess.js').Chess;
-type Square = import('chess.js').Square;
-type Move = import('chess.js').Move;
+import { Chess, Square, Move } from 'chess.js';
+
 // Piece values for evaluation
 const PIECE_VALUES: Record<string, number> = {
   p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000

@@ -1,9 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import * as ChessJSModule from 'chess.js';
-const Chess = typeof (ChessJSModule as any).Chess === 'function' ? (ChessJSModule as any).Chess : ChessJSModule;
-type Chess = import('chess.js').Chess;
-type Square = import('chess.js').Square;
+import { Chess, Square } from 'chess.js';
 import ChessBoard from './ChessBoard';
 import { getAIMove, getHint, AI_CONFIGS, DIFFICULTY_LEVELS, DifficultyLevel } from './engine';
 import type { BoardTheme } from './ChessBoard';
@@ -513,7 +510,7 @@ export default function ChessGame({ level, onScore, onLevelUp }: Props) {
         onMove={handleMove}
         flipped={flipped}
         boardTheme={boardTheme}
-        disabled={aiThinking || phase !== 'playing' || (mode !== 'local' && game.turn() !== playerColor)}
+        disabled={aiThinking || phase !== 'playing' || (mode === 'computer' && game.turn() !== playerColor)}
         lastMove={lastMove}
         hintSquare={hintSquare}
         hintTarget={hintTarget}
